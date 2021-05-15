@@ -122,8 +122,8 @@ mov al,18d
 mov c,37d
 mov r,11d
 call pos
-mov ah,09h
-lea dx,cadS
+;mov ah,09h
+;lea dx,cadS
 int 21h
 mov ax,1d
 int 33h
@@ -145,33 +145,35 @@ int 21h
 numero ren
 cmp bot,1d
 jne eti3
-cmp col,297d
+cmp col,588d
 jb etiAT ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,334d
+cmp col,567d
 ja etiAT ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,175d
+cmp ren,1d
 jb etiAT
-cmp ren,186d
+cmp ren,619d
 ja etiAT
 jmp etiext
 ;Valicion de area de dibujo
 etiAT:
-cmp ren,450d
+cmp ren,53d
 ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,30d
+cmp ren,393d
 jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,110d
-jb etiAC
+cmp col,150d
+jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,617d
+ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
 jmp eti4
 etiAC:; Area de validacion de todos los colores
 ;Validacion para color negro
-cmp col,10d
+cmp col,15d
 jb etiC1 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,35d
 ja eti3 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,215d
+cmp ren,242d
 jb etiC1
-cmp ren,244d
+cmp ren,263d
 ja etiC1
 mov color,0d; Se asigna color Negro
 etiC1:
@@ -298,11 +300,21 @@ etiC13:
 cmp col,10d
 jb etiC14 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,55d
-ja etiC13 ;JA=Jmp if Above (Brinca si esta arriba)
+ja etiC14 ;JA=Jmp if Above (Brinca si esta arriba)
 cmp ren,302d
 jb etiC14
 cmp ren,331d
 ja etiC14
+mov color,13d; Se asigna color Negro
+etiC14:
+cmp col,10d
+jb etiC15 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,55d
+ja etiC15 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,302d
+jb etiC15
+cmp ren,331d
+ja etiC15
 mov color,13d; Se asigna color Negro
 etiC15:
 cmp col,10d

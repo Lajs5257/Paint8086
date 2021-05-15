@@ -245,6 +245,66 @@ cmp ren,360d
 ja etiC8
 mov color,7d; Se asigna color Negro
 etiC8:
+cmp col,55d
+jb etiC9 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,100d
+ja etiC9 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,215d
+jb etiC9
+cmp ren,244d
+ja etiC9
+mov color,8d; Se asigna color Negro
+etiC9:
+cmp col,10d
+jb etiC10 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,55d
+ja etiC10 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,244d
+jb etiC10
+cmp ren,273d
+ja etiC10
+mov color,9d; Se asigna color Negro
+etiC10:
+cmp col,55d
+jb etiC11 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,100d
+ja etiC11 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,244d
+jb etiC11
+cmp ren,273d
+ja etiC11
+mov color,10d; Se asigna color Negro
+etiC11:
+cmp col,10d
+jb etiC12 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,55d
+ja etiC12 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,273d
+jb etiC12
+cmp ren,302d
+ja etiC12
+mov color,11d; Se asigna color Negro
+etiC12:
+cmp col,55d
+jb etiC13 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,100d
+ja etiC13 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,273d
+jb etiC13
+cmp ren,302d
+ja etiC13
+mov color,12d; Se asigna color Negro
+etiC13:
+cmp col,10d
+jb etiC14 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,55d
+ja etiC13 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,302d
+jb etiC14
+cmp ren,331d
+ja etiC14
+mov color,13d; Se asigna color Negro
+etiC15:
 cmp col,10d
 jb eti3 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,55d
@@ -253,7 +313,7 @@ cmp ren,360d
 jb eti3
 cmp ren,389d
 ja eti3
-mov color,8d; Se asigna color Negro
+mov color,15d; Se asigna color Negro
 jmp eti3
 etiExt:
 mov ah,00h

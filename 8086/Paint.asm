@@ -1,6 +1,6 @@
 org 100h
 
-numero macro num ;Macro que se encarga de mostrar la ubicacion del raton
+numero macro num ;;Macro que se encarga de mostrar la ubicacion del raton
  mov ax,num 
  mov bl,100d
  div bl 
@@ -19,7 +19,7 @@ numero macro num ;Macro que se encarga de mostrar la ubicacion del raton
  mov ah,02h
  int 21h
  pop ax
- shr ax,8 
+ shr ax,8d 
  mov dl,al
  add dl,30h
  mov ah,02h
@@ -119,12 +119,12 @@ inicio:
 mov ah,00h
 mov al,18d
 ;int 10h 
-mov c,37d
-mov r,11d
+mov c,65d
+mov r,27d
 call pos
 ;mov ah,09h
 ;lea dx,cadS
-int 21h
+;int 21h
 mov ax,1d
 int 33h
 eti3:
@@ -135,8 +135,8 @@ mov ren,dx
 mov col1,cx
 mov ren1,dx
 mov bot,bx
-mov c,65d
-mov r,3d
+mov c,70d
+mov r,27d
 call pos
 numero col
 mov ah,02h
@@ -145,187 +145,221 @@ int 21h
 numero ren
 cmp bot,1d
 jne eti3
+;Validacion salir
 cmp col,588d
 jb etiAT ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,567d
+cmp col,637d
 ja etiAT ;JA=Jmp if Above (Brinca si esta arriba)
 cmp ren,1d
 jb etiAT
-cmp ren,619d
+cmp ren,26d
 ja etiAT
 jmp etiext
+;***********************************************************************************************************************
 ;Valicion de area de dibujo
 etiAT:
-cmp ren,53d
-ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,393d
-jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,150d
 jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,617d
+cmp col,618d
+ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,53d
+jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,394d
 ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
 jmp eti4
+;***********************************************************************************************************************
 etiAC:; Area de validacion de todos los colores
 ;Validacion para color negro
 cmp col,15d
 jb etiC1 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,35d
-ja eti3 ;JA=Jmp if Above (Brinca si esta arriba)
+ja etiC1 ;JA=Jmp if Above (Brinca si esta arriba)
 cmp ren,242d
 jb etiC1
 cmp ren,263d
 ja etiC1
 mov color,0d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC1:
-cmp col,55d
+cmp col,42d
 jb etiC2 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,62d
 ja etiC2 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,215d
+cmp ren,242d
 jb etiC2
-cmp ren,244d
+cmp ren,263d
 ja etiC2
 mov color,1d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC2:
-cmp col,10d
+cmp col,69d
 jb etiC3 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,89d
 ja etiC3 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,244d
+cmp ren,242d
 jb etiC3
-cmp ren,273d
+cmp ren,263d
 ja etiC3
 mov color,2d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC3:
-cmp col,55d
+cmp col,96d
 jb etiC4 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,116d
 ja etiC4 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,244d
+cmp ren,242d
 jb etiC4
-cmp ren,273d
+cmp ren,263d
 ja etiC4
 mov color,3d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC4:
-cmp col,10d
+cmp col,14d
 jb etiC5 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,34d
 ja etiC5 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,273d
+cmp ren,272d
 jb etiC5
-cmp ren,302d
+cmp ren,293d
 ja etiC5
 mov color,4d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC5:
-cmp col,55d
+cmp col,42d
 jb etiC6 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,62d
 ja etiC6 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,273d
+cmp ren,271d
 jb etiC6
-cmp ren,302d
+cmp ren,291d
 ja etiC6
 mov color,5d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC6:
-cmp col,10d
+cmp col,69d
 jb etiC7 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,89d
 ja etiC7 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,302d
+cmp ren,271d
 jb etiC7
-cmp ren,331d
+cmp ren,291d
 ja etiC7
 mov color,6d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC7:
-cmp col,55d
+cmp col,96d
 jb etiC8 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,116d
 ja etiC8 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,331d
+cmp ren,271d
 jb etiC8
-cmp ren,360d
+cmp ren,291d
 ja etiC8
 mov color,7d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC8:
-cmp col,55d
+cmp col,14d
 jb etiC9 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,34d
 ja etiC9 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,215d
+cmp ren,302d
 jb etiC9
-cmp ren,244d
+cmp ren,322d
 ja etiC9
 mov color,8d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC9:
-cmp col,10d
+cmp col,42d
 jb etiC10 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,62d
 ja etiC10 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,244d
+cmp ren,302d
 jb etiC10
-cmp ren,273d
+cmp ren,322d
 ja etiC10
 mov color,9d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC10:
-cmp col,55d
+cmp col,70d
 jb etiC11 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,90d
 ja etiC11 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,244d
+cmp ren,301d
 jb etiC11
-cmp ren,273d
+cmp ren,321d
 ja etiC11
 mov color,10d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC11:
-cmp col,10d
+cmp col,96d
 jb etiC12 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,116d
 ja etiC12 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,273d
+cmp ren,301d
 jb etiC12
-cmp ren,302d
+cmp ren,321d
 ja etiC12
 mov color,11d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC12:
-cmp col,55d
+cmp col,14d
 jb etiC13 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,100d
+cmp col,35d
 ja etiC13 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,273d
+cmp ren,334d
 jb etiC13
-cmp ren,302d
+cmp ren,354d
 ja etiC13
 mov color,12d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC13:
-cmp col,10d
+cmp col,42d
 jb etiC14 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,63d
 ja etiC14 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,302d
+cmp ren,333d
 jb etiC14
-cmp ren,331d
+cmp ren,353d
 ja etiC14
 mov color,13d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC14:
-cmp col,10d
+cmp col,70d
 jb etiC15 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,91d
 ja etiC15 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,302d
+cmp ren,333d
 jb etiC15
-cmp ren,331d
+cmp ren,353d
 ja etiC15
-mov color,13d; Se asigna color Negro
+mov color,14d; Se asigna color Negro
+call ColSel
+jmp eti3
 etiC15:
-cmp col,10d
+cmp col,96d
 jb eti3 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,55d
+cmp col,117d
 ja eti3 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,360d
+cmp ren,333d
 jb eti3
 cmp ren,389d
 ja eti3
 mov color,15d; Se asigna color Negro
+call ColSel
 jmp eti3
 etiExt:
 mov ah,00h
@@ -346,12 +380,14 @@ int 33h
 cmp bx,2d
 jne eti4
 ;Empieza la validacion del area de dibujo
-cmp ren,450d
-ja eti4 ;JA=Jmp if Above (Brinca si esta arriba)
-cmp ren,30d
+cmp col,150d
 jb eti4 ;JB=Jump if Below (Brinca si esta abajo)
-cmp col,110d
-jb eti4
+cmp col,618d
+ja eti4 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,53d
+jb eti4 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,394d
+ja eti4 ;JA=Jmp if Above (Brinca si esta arriba)
 ;Termina la area de validado de area de dibujo
 mov col2,cx
 mov ren2,dx
@@ -378,7 +414,7 @@ etiFV:
 mov ax,2d
 int 33h
 call cuadro
-call repintar
+;call repintar
 mov ax,1d
 int 33h
  jmp eti3
@@ -458,5 +494,21 @@ lea dx,cadS
 int 21h
 mov ax,1d
 int 33h
+ret
+endp
+ColSel proc
+ mov dx,378d 
+eti9:
+ mov cx,90d
+eti10: 
+ mov ah,0ch
+ mov al,color
+ int 10h
+ inc cx
+ cmp cx,111d
+ jbe eti10 ;JBE=Jump if Below or Equal (Salta si esta abajo, o si es Igual)
+ inc dx
+ cmp dx,398d
+ jbe eti9
 ret
 endp

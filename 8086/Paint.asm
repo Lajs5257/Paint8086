@@ -143,7 +143,7 @@ mov al,18d
 mov c,65d
 mov r,27d
 call pos
-;call ColFal
+call ColFal
 ;mov ah,09h
 ;lea dx,cadS
 ;int 21h

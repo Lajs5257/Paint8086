@@ -143,10 +143,11 @@ mov al,18d
 mov c,65d
 mov r,27d
 call pos
-call ColFal
+;call ColFal
 ;mov ah,09h
 ;lea dx,cadS
 ;int 21h
+
 mov ax,1d
 int 33h
 eti3:
@@ -189,51 +190,151 @@ jb etiAH ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,397d
 ja etiAH ;JA=Jmp if Above (Brinca si esta arriba)
 ;Mandar a area de trabajo correspondiente
+etiH0:
 cmp herra,0d
-je eti3
+jne etiH1
+etiH1:
 cmp herra,1d
+jne etiH2
 call lapiz
-je eti3
+jmp eti3
+etiH2:
 cmp herra,2d
-je eti3
+jne etiH3
+etiH3:
 cmp herra,3d
-je eti3
-
+jne etiH4
+etiH4:
 cmp herra,4d
-je eti3
+jne etiH5
+etiH5:
 cmp herra,5d
-je eti3
+jne etiH6
+etiH6:
 cmp herra,6d
-je eti3
+jne etiH7
+call Barril
+jmp eti3
+etiH7:
 cmp herra,7d
-je eti3
+jne etiH8
+etiH8:
 cmp herra,8d
-je eti4
+jne etiH9
+jmp eti4
+etiH9:
 cmp herra,9d
-je eti3
+jne eti3
+jmp eti4
 ;comparaciones 
 etiAH:
 ;Validacion de area para herramienta de lapiz
 cmp col,15d
-jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
+jb etiAH2 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,45d
-ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
+ja etiAH2 ;JA=Jmp if Above (Brinca si esta arriba)
 cmp ren,78d
-jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
+jb etiAH2 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,108d
-ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
+ja etiAH2 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,1d
 jmp eti3
-;Validacion de area para herramienta rectangulo contorno
+
+etiAH2:
+;Validacion de area para herramienta de lapiz
 cmp col,54d
-jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
+jb etiAH3 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,84d
+ja etiAH3 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,78d
+jb etiAH3 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,108d
+ja etiAH3 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,2d
+jmp eti3
+
+etiAH3:
+;Validacion de area para herramienta de lapiz
+cmp col,91d
+jb etiAH4 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,122d
+ja etiAH4 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,78d
+jb etiAH4 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,108d
+ja etiAH4 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,3d
+jmp eti3
+etiAH4:
+;Validacion de area para herramienta de lapiz
+cmp col,15d
+jb etiAH5 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,45d
+ja etiAH5 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,117d
+jb etiAH5 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,148d
+ja etiAH5 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,4d
+jmp eti3
+etiAH5:
+;Validacion de area para herramienta de lapiz
+cmp col,53d
+jb etiAH6 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,83d
+ja etiAH6 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,117d
+jb etiAH6 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,148d
+ja etiAH6 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,5d
+jmp eti3
+etiAH6:
+;Validacion de area para herramienta de lapiz
+cmp col,91d
+jb etiAH7 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,121d
+ja etiAH7 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,117d
+jb etiAH7 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,148d
+ja etiAH7 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,6d
+jmp eti3
+etiAH7:
+;Validacion de area para herramienta de lapiz
+cmp col,15d
+jb etiAH8 ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,45d
+ja etiAH8 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,155d
+jb etiAH8 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,185d
+ja etiAH8 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,7d
+jmp eti3
+;Valiacion de area para herramienta rectangulo contorno
+etiAH8:
+cmp col,54d
+jb etiAH9 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,85d
+ja etiAH9 ;JA=Jmp if Above (Brinca si esta arriba)
+cmp ren,155d
+jb etiAH9 ;JB=Jump if Below (Brinca si esta abajo)
+cmp ren,185d
+ja etiAH9 ;JA=Jmp if Above (Brinca si esta arriba)
+mov herra,8d
+jmp eti3
+etiAH9:
+cmp col,91d
+jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
+cmp col,121d
 ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
 cmp ren,155d
 jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,185d
 ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
-mov herra,8d
+mov herra,9d
 jmp eti3
 etiAC:
 ;***************
@@ -512,8 +613,13 @@ etiRR:
 etiFV:
 mov ax,2d
 int 33h
+cmp herra,8
+jne etiCRe
 call cuadro
-;call repintar
+jmp etirepin
+etiCRe:
+call cuadroRe
+etiRepin:
 mov ax,1d
 int 33h
  jmp eti3
@@ -611,6 +717,7 @@ eti10:
  jbe eti9
 ret
 endp
+
 ColFal proc
  mov dx,335d 
 eti11:
@@ -628,11 +735,62 @@ eti12:
 ret
 endp
 lapiz proc
+ ;Apaga el raton
+ mov ax,2d
+ int 33h
  mov ah,0Ch ;Funcion 12d=0Ch para pintar o desplegar PIXEL
  mov al,color ;AL=Atributos de color, parte baja: 1010b=10d=Color Verde (vea Paleta de Color)
  mov cx,col1 ;Cx=Columna donde se despliega PIXEL (empieza desde cero)
  mov dx,ren1 ;Dx=Renglon donde se despliega PIXEL (empieza desde cero)
  int 10h ;INT 10H funcion 0CH, despliega PIXEL de color en posicion CX (Columna), DX (Renglon)
+ ;prende el raton
+ mov ax,1d
+ int 33h
 endm 
+ret
+endp
+
+Barril proc 
+;Apaga el raton
+ mov ax,2d
+ int 33h 
+ mov dx,51d 
+eti13:
+ mov cx,150d
+eti14: 
+ mov ah,0ch
+ mov al,color
+ int 10h
+ inc cx
+ cmp cx,620d
+ jbe eti14 ;JBE=Jump if Below or Equal (Salta si esta abajo, o si es Igual)
+ inc dx
+ cmp dx,397d
+ jbe eti13
+ ;prende el raton
+ mov ax,1d
+ int 33h
+ret
+endp
+CuadroRe proc ;Se encargo de pintar el cuadrado que va relleno
+;Apaga el raton
+ mov ax,2d
+ int 33h 
+ mov dx,ren1
+eti15:
+ mov cx,col1
+eti16:
+ mov ah,0ch
+ mov al,color
+ int 10h
+ inc cx
+ cmp cx,col2
+ jbe eti16 ;JBE=Jump if Below or Equal (Salta si esta abajo, o si es Igual)
+ inc dx
+ cmp dx,ren2
+ jbe eti15|
+ ;prende el raton
+ mov ax,1d
+ int 33h
 ret
 endp

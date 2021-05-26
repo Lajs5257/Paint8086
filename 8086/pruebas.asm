@@ -143,7 +143,7 @@ mov al,18d
 mov c,65d
 mov r,27d
 call pos
-call ColFal
+;call ColFal
 ;mov ah,09h
 ;lea dx,cadS
 ;int 21h
@@ -189,28 +189,40 @@ jb etiAH ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,397d
 ja etiAH ;JA=Jmp if Above (Brinca si esta arriba)
 ;Mandar a area de trabajo correspondiente
+etiH0:
 cmp herra,0d
-je eti3
+jne etiH1
+etiH1:
 cmp herra,1d
+jne etiH2
 call lapiz
-je eti3
+jmp eti3
+etiH2:
 cmp herra,2d
-je eti3
+jne etiH3
+etiH3:
 cmp herra,3d
-je eti3
-
+jne etiH4
+etiH4:
 cmp herra,4d
-je eti3
+jne etiH5
+etiH5:
 cmp herra,5d
-je eti3
+jne etiH6
+etiH6:
 cmp herra,6d
-je eti3
+jne etiH7
+etiH7:
 cmp herra,7d
-je eti3
+jne etiH8
+etiH8:
 cmp herra,8d
-je eti4
+jne etiH9
+call ColFal
+etiH9:
 cmp herra,9d
-je eti3
+jne eti3
+
 ;comparaciones 
 etiAH:
 ;Validacion de area para herramienta de lapiz
@@ -234,6 +246,7 @@ jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,185d
 ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,8d
+call ColFal
 jmp eti3
 etiAC:
 ;***************
@@ -628,11 +641,17 @@ eti12:
 ret
 endp
 lapiz proc
+ ;Apaga el raton
+ mov ax,2d
+ int 33h
  mov ah,0Ch ;Funcion 12d=0Ch para pintar o desplegar PIXEL
  mov al,color ;AL=Atributos de color, parte baja: 1010b=10d=Color Verde (vea Paleta de Color)
  mov cx,col1 ;Cx=Columna donde se despliega PIXEL (empieza desde cero)
  mov dx,ren1 ;Dx=Renglon donde se despliega PIXEL (empieza desde cero)
  int 10h ;INT 10H funcion 0CH, despliega PIXEL de color en posicion CX (Columna), DX (Renglon)
+ ;prende el raton
+ mov ax,1d
+ int 33h
 endm 
 ret
 endp

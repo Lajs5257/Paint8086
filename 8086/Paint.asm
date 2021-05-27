@@ -201,6 +201,8 @@ jmp eti3
 etiH2:
 cmp herra,2d
 jne etiH3
+call goma
+jmp eti3
 etiH3:
 cmp herra,3d
 jne etiH4
@@ -241,7 +243,7 @@ mov herra,1d
 jmp eti3
 
 etiAH2:
-;Validacion de area para herramienta de lapiz
+;Validacion de area para herramienta de goma
 cmp col,54d
 jb etiAH3 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,84d
@@ -254,7 +256,7 @@ mov herra,2d
 jmp eti3
 
 etiAH3:
-;Validacion de area para herramienta de lapiz
+;Validacion de area para herramienta de spray
 cmp col,91d
 jb etiAH4 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,122d
@@ -266,7 +268,7 @@ ja etiAH4 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,3d
 jmp eti3
 etiAH4:
-;Validacion de area para herramienta de lapiz
+;Validacion de area para herramienta de crayola
 cmp col,15d
 jb etiAH5 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,45d
@@ -278,7 +280,7 @@ ja etiAH5 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,4d
 jmp eti3
 etiAH5:
-;Validacion de area para herramienta de lapiz
+;Validacion de area para herramienta de brocha
 cmp col,53d
 jb etiAH6 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,83d
@@ -290,7 +292,7 @@ ja etiAH6 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,5d
 jmp eti3
 etiAH6:
-;Validacion de area para herramienta de lapiz
+;Validacion de area para herramienta de barril
 cmp col,91d
 jb etiAH7 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,121d
@@ -302,7 +304,7 @@ ja etiAH7 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,6d
 jmp eti3
 etiAH7:
-;Validacion de area para herramienta de lapiz
+;Validacion de area para herramienta de linea
 cmp col,15d
 jb etiAH8 ;JB=Jump if Below (Brinca si esta abajo)
 cmp col,45d
@@ -325,6 +327,7 @@ cmp ren,185d
 ja etiAH9 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,8d
 jmp eti3
+;Valiacion de area para herramienta rectangulo relleno
 etiAH9:
 cmp col,91d
 jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
@@ -740,6 +743,21 @@ lapiz proc
  int 33h
  mov ah,0Ch ;Funcion 12d=0Ch para pintar o desplegar PIXEL
  mov al,color ;AL=Atributos de color, parte baja: 1010b=10d=Color Verde (vea Paleta de Color)
+ mov cx,col1 ;Cx=Columna donde se despliega PIXEL (empieza desde cero)
+ mov dx,ren1 ;Dx=Renglon donde se despliega PIXEL (empieza desde cero)
+ int 10h ;INT 10H funcion 0CH, despliega PIXEL de color en posicion CX (Columna), DX (Renglon)
+ ;prende el raton
+ mov ax,1d
+ int 33h
+endm 
+ret
+endp
+goma proc
+ ;Apaga el raton
+ mov ax,2d
+ int 33h
+ mov ah,0Ch ;Funcion 12d=0Ch para pintar o desplegar PIXEL
+ mov al,15d ;AL=Atributos de color, parte baja: 1010b=10d=Color Verde (vea Paleta de Color)
  mov cx,col1 ;Cx=Columna donde se despliega PIXEL (empieza desde cero)
  mov dx,ren1 ;Dx=Renglon donde se despliega PIXEL (empieza desde cero)
  int 10h ;INT 10H funcion 0CH, despliega PIXEL de color en posicion CX (Columna), DX (Renglon)

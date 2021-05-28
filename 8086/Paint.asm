@@ -25,6 +25,15 @@ numero macro num ;;Macro que se encarga de mostrar la ubicacion del raton
  mov ah,02h
  int 21h
 endm
+; Dibuja indicaciones para uso del programa
+texto macro cad
+mov c,2d
+mov r,27d
+call pos
+mov ah,09h
+lea dx,cad
+int 21h
+endm
 jmp eti0
 ;Zona de declaracion de Cadenas e Identificadores creados por el usuario (variables)
 cad db 'Error, archivo no encontrado!...presione una tecla para terminar.$' 
@@ -56,6 +65,20 @@ herra db 0
 ; 8 Rectangulo orillas
 ; 9 Rectangulo relleno
 
+; Declaracion de textos para informar al usuario
+ cad0 db '-> Seleccione una herramienta                               $'
+ cad1 db '-> Lapiz seleccionado: Use clic izquierdo para dibujar      $'
+ cad2 db '-> Goma seleccionada: Use clic izquierdo para borrar        $'
+ cad3 db '-> Spray seleccionado: Use clic izquierdo para dibujar      $'
+ cad4 db '-> Crayola seleccionada: Use clic izquierdo para dibujar    $'
+ cad5 db '-> Brocha seleccionada: Use clic izquierdo para dibujar     $'
+ cad6 db '-> Barril selecciondo: Use clic izquierdo para rellenar     $'
+ cad7 db '-> Linea seleccionada: Clic izquiedo marca punto inicial    $'
+ cad71 db '-> Linea seleccionada: En espera de derecho para punto final$'
+ cad8 db '-> Cuadro seleccionado: Clic izquiedo marca punto inicial   $'
+ cad9 db '-> Cuadro relleo seleccionado: Clic izquiedo par iniciar    $'
+ cad10 db '-> Seleccione una herramienta$'
+
 tam db 0
 ;Tamaños de lapiz
 ; 0 Tamaño normal
@@ -66,6 +89,8 @@ tam db 0
 bot dw ?
 c db ?
 r db ?
+cT db ?
+rT db ?
 ;**************
 eti0:
 mov ah,3dh ;Funcion 3DH, abre un archivo existente
@@ -136,17 +161,15 @@ eti2:
  ; Aqui iniciara el proceso para poder validar areas y darle vida a todo esto
  ;mov ah,07h
  jmp inicio
- cadS db 'SALIR$'
+
 inicio:
 mov ah,00h
 mov al,18d 
+texto cad0
 mov c,65d
 mov r,27d
 call pos
 call ColFal
-;mov ah,09h
-;lea dx,cadS
-;int 21h
 
 mov ax,1d
 int 33h
@@ -206,6 +229,8 @@ jmp eti3
 etiH3:
 cmp herra,3d
 jne etiH4
+call spray
+jmp eti3
 etiH4:
 cmp herra,4d
 jne etiH5
@@ -240,6 +265,7 @@ jb etiAH2 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,108d
 ja etiAH2 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,1d
+texto cad1
 jmp eti3
 
 etiAH2:
@@ -253,6 +279,7 @@ jb etiAH3 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,108d
 ja etiAH3 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,2d
+texto cad2
 jmp eti3
 
 etiAH3:
@@ -266,7 +293,9 @@ jb etiAH4 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,108d
 ja etiAH4 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,3d
+texto cad3
 jmp eti3
+
 etiAH4:
 ;Validacion de area para herramienta de crayola
 cmp col,15d
@@ -278,6 +307,7 @@ jb etiAH5 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,148d
 ja etiAH5 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,4d
+texto cad4
 jmp eti3
 etiAH5:
 ;Validacion de area para herramienta de brocha
@@ -290,6 +320,7 @@ jb etiAH6 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,148d
 ja etiAH6 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,5d
+texto cad5
 jmp eti3
 etiAH6:
 ;Validacion de area para herramienta de barril
@@ -302,6 +333,7 @@ jb etiAH7 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,148d
 ja etiAH7 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,6d
+texto cad6
 jmp eti3
 etiAH7:
 ;Validacion de area para herramienta de linea
@@ -314,6 +346,7 @@ jb etiAH8 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,185d
 ja etiAH8 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,7d
+texto cad7
 jmp eti3
 ;Valiacion de area para herramienta rectangulo contorno
 etiAH8:
@@ -326,6 +359,7 @@ jb etiAH9 ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,185d
 ja etiAH9 ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,8d
+texto cad8
 jmp eti3
 ;Valiacion de area para herramienta rectangulo relleno
 etiAH9:
@@ -338,6 +372,7 @@ jb etiAC ;JB=Jump if Below (Brinca si esta abajo)
 cmp ren,185d
 ja etiAC ;JA=Jmp if Above (Brinca si esta arriba)
 mov herra,9d
+texto cad9
 jmp eti3
 etiAC:
 ;***************
@@ -693,17 +728,7 @@ cuadro proc
  jbe eti8
 ret
 endp
-repintar proc
-mov c,37d
-mov r,11d
-call pos
-mov ah,09h
-lea dx,cadS
-int 21h
-mov ax,1d
-int 33h
-ret
-endp
+
 ColSel proc
  mov dx,378d 
 eti9:
@@ -720,7 +745,7 @@ eti10:
  jbe eti9
 ret
 endp
-
+; Pinta el colores de la paleta por que no se pudo igualar el color deseado
 ColFal proc
  mov dx,335d 
 eti11:
@@ -737,10 +762,12 @@ eti12:
  jbe eti11
 ret
 endp
+; Herramienta de lapiz pinta un pixel 
 lapiz proc
  ;Apaga el raton
  mov ax,2d
  int 33h
+ ; Pinta pixel
  mov ah,0Ch ;Funcion 12d=0Ch para pintar o desplegar PIXEL
  mov al,color ;AL=Atributos de color, parte baja: 1010b=10d=Color Verde (vea Paleta de Color)
  mov cx,col1 ;Cx=Columna donde se despliega PIXEL (empieza desde cero)
@@ -752,6 +779,7 @@ lapiz proc
 endm 
 ret
 endp
+; herramienta de goma pinta un pixel de color blanco
 goma proc
  ;Apaga el raton
  mov ax,2d
@@ -767,7 +795,7 @@ goma proc
 endm 
 ret
 endp
-
+; Herramienta barril pinta toda el area de dibujo del color seleccionado
 Barril proc 
 ;Apaga el raton
  mov ax,2d
@@ -790,6 +818,7 @@ eti14:
  int 33h
 ret
 endp
+; procedimiento de cuadrado relleno
 CuadroRe proc ;Se encargo de pintar el cuadrado que va relleno
 ;Apaga el raton
  mov ax,2d
@@ -806,9 +835,72 @@ eti16:
  jbe eti16 ;JBE=Jump if Below or Equal (Salta si esta abajo, o si es Igual)
  inc dx
  cmp dx,ren2
- jbe eti15|
+ jbe eti15
  ;prende el raton
  mov ax,1d
  int 33h
 ret
 endp
+; procedimiento de cuadrado relleno
+spray proc
+ ;Apaga el raton
+ mov bx,0
+ mov ax,2d
+ int 33h
+ mov cx,col
+ mov dx,ren
+ inc cx
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+ add cx,5
+ add dx,10
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+ inc cx
+ sub dx,5
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+ add cx,6
+ add dx,10
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+ sub cx,15
+ inc dx
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+ add cx,2
+ sub dx,1
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+ inc cx
+ sub dx,2
+ call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
+;prende el raton
+ mov ax,1d
+ int 33h
+ret
+endp
+;Procedimiento que valida el area en que se pondra el pixel, una vez que sea validad la pintara
+VaCor proc
+cmp cx,150d
+jb etiRCol ;JB=Jump if Below (Brinca si esta abajo)
+cmp cx,618d
+ja etiRCol ;JA=Jmp if Above (Brinca si esta arriba)
+etiVR:
+cmp dx,53d
+jb etiRRen ;JB=Jump if Below (Brinca si esta abajo)
+cmp dx,397d
+ja etiRRen ;JA=Jmp if Above (Brinca si esta arriba)
+jmp etiFinV
+etiRCol:;regresa dentro de los limites
+mov cx,col
+jmp etiVR
+etiRRen:;regresa dentro de los limites
+mov dx,ren
+etiFinV:
+call ponpix 
+ret
+endp
+; procedimiento que pinta el pixel del color que este seleccionado
+ponpix proc
+ mov ah,0Ch ;Funcion 12d=0Ch para poner PIXEL
+ mov al,color ;Atributos de color, 1010b=10d=Verde
+ int 10h
+ ret
+endp 
+proc
+

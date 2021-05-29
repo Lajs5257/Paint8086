@@ -33,6 +33,12 @@ call pos
 mov ah,09h
 lea dx,cad
 int 21h
+mov c,65d
+mov r,27d
+call pos
+mov c,70d
+mov r,27d
+call pos
 endm
 jmp eti0
 ;Zona de declaracion de Cadenas e Identificadores creados por el usuario (variables)
@@ -74,10 +80,11 @@ herra db 0
  cad5 db '-> Brocha seleccionada: Use clic izquierdo para dibujar     $'
  cad6 db '-> Barril selecciondo: Use clic izquierdo para rellenar     $'
  cad7 db '-> Linea seleccionada: Clic izquiedo marca punto inicial    $'
- cad71 db '-> Linea seleccionada: En espera de derecho para punto final$'
+ cad72 db '-> Linea seleccionada: En espera de derecho para punto final$'
  cad8 db '-> Cuadro seleccionado: Clic izquiedo marca punto inicial   $'
- cad9 db '-> Cuadro relleo seleccionado: Clic izquiedo par iniciar    $'
- cad10 db '-> Seleccione una herramienta$'
+ cad82 db '-> Cuadro seleccionado: Clic derecho marca punto final      $'
+ cad9 db '-> Cuadro relleno seleccionado:Clic izquiedo para iniciar   $'
+ cad92 db '-> Cuadro relleno seleccionado: Clic derecho para terminar  $'
 
 tam db 0
 ;Tamaños de lapiz
@@ -245,13 +252,17 @@ jmp eti3
 etiH7:
 cmp herra,7d
 jne etiH8
+texto cad72
+jmp eti4
 etiH8:
 cmp herra,8d
 jne etiH9
+texto cad82
 jmp eti4
 etiH9:
 cmp herra,9d
 jne eti3
+texto cad92
 jmp eti4
 ;comparaciones 
 etiAH:
@@ -604,6 +615,9 @@ mov ah,00h
 mov al,3d
 int 10h
 int 20h
+; - - - - - - - - - - - - - - - - - - - - - -
+; En esta etiqueta se espera un clic derecho
+; - - - - - - - - - - - - - - - - - - - - - -
 eti4:
 mov col,cx
 mov ren,dx
@@ -651,12 +665,20 @@ etiRR:
 etiFV:
 mov ax,2d
 int 33h
+cmp herra,7
+jne etiCCo
+call linea
+texto cad7
+jmp etirepin
+etiCCo:
 cmp herra,8
 jne etiCRe
 call cuadro
+texto cad8
 jmp etirepin
 etiCRe:
 call cuadroRe
+texto cad9
 etiRepin:
 mov ax,1d
 int 33h
@@ -689,7 +711,7 @@ endp
 cuadro proc
  mov cx,col1
  mov dx,ren1
- eti5: ;Inicia proceso para dibujar linea superior horizontal
+eti5: ;Inicia proceso para dibujar linea superior horizontal
  mov ah,0ch
  mov al,color
  int 10h
@@ -699,7 +721,7 @@ cuadro proc
  
  mov cx,col1
  mov dx,ren2
- eti6: ;Inicia proceso para dibujar linea inferior horizontal
+eti6: ;Inicia proceso para dibujar linea inferior horizontal
  mov ah,0ch
  mov al,color
  int 10h
@@ -709,7 +731,7 @@ cuadro proc
  
  mov cx,col1
  mov dx,ren1
- eti7: ;Inicia proceso para dibujar linea izquierda vertical
+eti7: ;Inicia proceso para dibujar linea izquierda vertical
  mov ah,0ch
  mov al,color
  int 10h
@@ -719,7 +741,7 @@ cuadro proc
  
  mov cx,col2
  mov dx,ren1
- eti8: ;Inicia proceso para dibujar linea derecha vertical
+eti8: ;Inicia proceso para dibujar linea derecha vertical
  mov ah,0ch
  mov al,color
  int 10h
@@ -841,14 +863,44 @@ eti16:
  int 33h
 ret
 endp
-; procedimiento de cuadrado relleno
+; Procedimiento para poder dibujar una linea
+linea proc
+ mov cx,col1
+ mov dx,ren1
+ mov ax,col2
+ mov bx,ren2
+ sub ax,col1
+ sub bx,ren1
+ cmp ax,bx
+ jbe etiLV 
+ 
+ etiLH: ;Inicia proceso para dibujar linea superior horizontal
+ mov ah,0ch
+ mov al,color
+ int 10h
+ inc cx
+ cmp cx,col2
+ jbe etiLH ;JBE=Jump if Below or Equal (Salta si esta abajo, o si es Igual)
+ jmp etiFL
+
+ etiLV: ;Inicia proceso para dibujar linea izquierda vertical
+ mov ah,0ch
+ mov al,color
+ int 10h
+ inc dx
+ cmp dx,ren2
+ jbe etiLV
+ etiFL:
+ret
+endp
+; procedimiento para dibujar el spray
 spray proc
  ;Apaga el raton
  mov bx,0
  mov ax,2d
  int 33h
- mov cx,col
- mov dx,ren
+ mov cx,col ; aqui esta donde se dio el click
+ mov dx,ren ; aqui esta donde se dio el click
  inc cx
  call VaCor; Mandamos validar el area donde ira el pixel y tambien lo pintamos
  add cx,5
